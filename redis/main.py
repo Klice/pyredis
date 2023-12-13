@@ -1,5 +1,5 @@
-from redis.server import RedisServer
+from redis.server import RedisTCPServer
 
 
 if __name__ == "__main__":
-    RedisServer.start("localhost", 9999)
+    RedisTCPServer.start("localhost", 9999)

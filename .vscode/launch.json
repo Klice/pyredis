@@ -6,6 +6,9 @@
     "configurations": [
         {
             "name": "Run Reddis",
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}${pathSeparator}${env:PYTHONPATH}"
+            },
             "type": "python",
             "request": "launch",
             "program": "redis/main.py",
