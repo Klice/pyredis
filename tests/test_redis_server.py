@@ -1,6 +1,7 @@
 import pytest
 
 from redis.redis_server import RedisServer
+from redis.types import RedisError, SimpleString
 
 
 @pytest.fixture
@@ -9,4 +10,25 @@ def server():
 
 
 def test_ping(server):
-    assert server.run(["PING"]) == "PONG"
+    res = server.run(["PING"])
+    assert isinstance(res, SimpleString)
+    assert res == SimpleString("PONG")
+
+
+def test_echo(server):
+    assert server.run(["ECHO", "Test World"]) == "Test World"
+
+
+def test_set_get(server):
+    assert server.run(["SET", "Key", "Value"]) == SimpleString("OK")
+    assert server.run(["GET", "Key"]) == "Value"
+
+
+def test_unknown_command(server):
+    res = server.run(["SOMECOMMAND", "Arg"])
+    assert isinstance(res, RedisError)
+    assert "SOMECOMMAND Arg" in str(res)
+
+
+def test_config_return_empty(server):
+    assert server.run(["CONFIG", "Key", "Value"]) == SimpleString("")
