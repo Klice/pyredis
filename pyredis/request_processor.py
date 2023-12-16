@@ -1,5 +1,5 @@
-from redis.deserializer import RESPDeserializer
-from redis.serializer import RESPSerializer
+from pyredis.deserializer import RESPDeserializer
+from pyredis.serializer import RESPSerializer
 
 
 class RequestProcessor:

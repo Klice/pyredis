@@ -1,4 +1,4 @@
-from redis.types import RedisError
+from pyredis.redis_types import RedisError
 
 
 class RESPDeserializer:

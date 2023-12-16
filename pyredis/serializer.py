@@ -1,5 +1,5 @@
 
-from redis.types import RedisError, SimpleString
+from pyredis.redis_types import RedisError, SimpleString
 
 
 class RESPSerializer:
@@ -7,19 +7,19 @@ class RESPSerializer:
     def _encode(cls, data):
         res = []
         if data is None:
-            res = ["$-1"]
-        if isinstance(data, str):
-            res = [f"${len(data)}", data]
+            res.append("$-1")
+        if isinstance(data, str) and not isinstance(data, SimpleString):
+            res += [f"${len(data)}", data]
         if isinstance(data, int):
-            res = [f":{data}"]
+            res.append(f":{data}")
         if isinstance(data, list):
-            res = [f"*{len(data)}"]
+            res.append(f"*{len(data)}")
             for d in data:
                 res += cls._encode(d)
         if isinstance(data, RedisError):
-            res = [f"-{data}"]
+            res.append(f"-{data}")
         if isinstance(data, SimpleString):
-            res = [f"+{data}"]
+            res.append(f"+{data}")
         return res
 
     @classmethod

@@ -1,4 +1,4 @@
-from redis.types import RedisError, SimpleString
+from pyredis.redis_types import RedisError, SimpleString
 
 
 COMMANDS = {

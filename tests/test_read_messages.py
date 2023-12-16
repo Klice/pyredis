@@ -1,6 +1,6 @@
 import pytest
-from redis.deserializer import RESPDeserializer
-from redis.types import RedisError
+from pyredis.deserializer import RESPDeserializer
+from pyredis.redis_types import RedisError
 
 messages = [
     ("$-1\r\n".encode('ascii'), None),

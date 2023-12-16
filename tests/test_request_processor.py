@@ -1,8 +1,8 @@
 from unittest.mock import Mock
 import pytest
 
-from redis.request_processor import RequestProcessor
-from redis.types import RedisError, SimpleString
+from pyredis.request_processor import RequestProcessor
+from pyredis.redis_types import RedisError, SimpleString
 
 
 @pytest.fixture

@@ -1,5 +1,5 @@
 import logging
-from redis.server import RedisTCPServer
+from .server import RedisTCPServer
 
 
 if __name__ == "__main__":

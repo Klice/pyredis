@@ -1,7 +1,7 @@
 import pytest
 
-from redis.redis_server import RedisServer
-from redis.types import RedisError, SimpleString
+from pyredis.redis_server import RedisServer
+from pyredis.redis_types import RedisError, SimpleString
 
 
 @pytest.fixture

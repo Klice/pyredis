@@ -1,5 +1,5 @@
 import pytest
-from redis.redis_server import RedisDataStore
+from pyredis.redis_server import RedisDataStore
 
 
 @pytest.fixture

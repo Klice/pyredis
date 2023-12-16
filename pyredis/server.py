@@ -2,8 +2,8 @@ import logging
 import socketserver
 import sys
 import threading
-from redis.redis_server import RedisServer
-from redis.request_processor import RequestProcessor
+from pyredis.redis_server import RedisServer
+from pyredis.request_processor import RequestProcessor
 
 logger = logging.getLogger(__name__)
 
