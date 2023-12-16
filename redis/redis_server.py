@@ -15,9 +15,13 @@ class RedisDataStore:
 
     def set(self, key, value):
         self.data_store[key] = value
+        return SimpleString("OK")
 
     def get(self, key):
-        return self.data_store[key]
+        if key in self.data_store:
+            return self.data_store[key]
+        else:
+            return None
 
 
 class RedisServer:
@@ -29,6 +33,4 @@ class RedisServer:
             return RedisError("Unknown command: " + " ".join(command_with_args))
         args = command_with_args[1:]
         res = COMMANDS[command](self.data_store, *args)
-        if res is None:
-            res = SimpleString("OK")
         return res

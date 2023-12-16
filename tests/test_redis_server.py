@@ -24,6 +24,10 @@ def test_set_get(server):
     assert server.run(["GET", "Key"]) == "Value"
 
 
+def test_get_nonexistent(server):
+    assert server.run(["GET", "nonexistent"]) is None
+
+
 def test_unknown_command(server):
     res = server.run(["SOMECOMMAND", "Arg"])
     assert isinstance(res, RedisError)
