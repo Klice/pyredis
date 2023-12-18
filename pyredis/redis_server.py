@@ -22,7 +22,7 @@ REDIS_COMMANDS = {
 }
 
 
-class RedisTimesProvider():
+class RedisTimeProvider():
     def get_time(self):
         dt = datetime.now()
         return datetime.timestamp(dt) * 1000
@@ -31,7 +31,7 @@ class RedisTimesProvider():
 class RedisServer:
     data_store = RedisDataStore()
 
-    def __init__(self, time_provider=RedisTimesProvider()):
+    def __init__(self, time_provider=RedisTimeProvider()):
         self.time_provider = time_provider
 
     def run(self, command_with_args):
