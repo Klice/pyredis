@@ -56,7 +56,16 @@ class RedisCommand:
         args_iter = iter(args)
         res = {}
         for p in self.main_params:
-            res[p] = next(args_iter)
+            if p.startswith("*"):
+                p = p[1:]
+                res[p] = []
+                while True:
+                    try:
+                        res[p].append(next(args_iter))
+                    except StopIteration:
+                        break
+            else:
+                res[p] = next(args_iter)
 
         for a in args_iter:
             self._check_valid_arg(a)

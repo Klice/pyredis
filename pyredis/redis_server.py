@@ -1,4 +1,5 @@
 from datetime import datetime
+from pyredis.data_store import RedisDataStore
 from pyredis.redis_command_parser import RedisCommand
 from pyredis.redis_types import RedisError, SimpleString
 
@@ -13,31 +14,9 @@ REDIS_COMMADS = {
         ["key", "value"],
         ["GET", ["NX", "XX"], ["KEEPTTL", "EX", "PX", "EXAT", "PXAT"]],
         {"EX": int, "PX": int, "EXAT": int, "PXAT": int}
-    )
+    ),
+    "DEL": RedisCommand("DEL", ["*key"]),
 }
-
-
-class RedisDataStore:
-    data_store = {}
-
-    def set(self, key, value, ts, ttl=None, is_get=False):
-        ret = None
-        if is_get:
-            ret = self.get(key, ts)
-        self.data_store[key] = {
-            "value": value,
-            "ttl": ttl,
-        }
-        return ret
-
-    def get(self, key, ts):
-        if key in self.data_store:
-            if self.data_store[key]["ttl"] is not None and self.data_store[key]["ttl"] <= ts:
-                del (self.data_store[key])
-                return None
-            return self.data_store[key]
-        else:
-            return None
 
 
 class RedisTimesProvider():
@@ -87,6 +66,9 @@ class RedisServer:
 
     def _command_config(self, _):
         return SimpleString("")
+
+    def _command_del(self, data):
+        return self.data_store.delete(data["key"])
 
     @staticmethod
     def _return_value(value):

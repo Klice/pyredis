@@ -8,7 +8,13 @@ def command():
     return REDIS_COMMADS["SET"]
 
 
-class TestCOnfigCommand:
+class TestParamList:
+    def test_extra_args(self):
+        command = RedisCommand("DEL", ["*key"])
+        assert command.parse(["key1", "key2", "key3"])["key"] == ["key1", "key2", "key3"]
+
+
+class TestConfigCommand:
     def test_extra_args(self):
         command = RedisCommand("CONFIG", allow_extra=True)
         command.parse(["key"])

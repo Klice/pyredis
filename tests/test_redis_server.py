@@ -31,3 +31,16 @@ def test_unknown_command(server):
 
 def test_config_return_empty(server):
     assert server.run(["CONFIG", "Key", "Value"]) == SimpleString("")
+
+
+def test_del_one_key(server):
+    assert server.run(["DEL", "key"]) == 0
+    server.run(["SET", "key", "value"])
+    assert server.run(["DEL", "key"]) == 1
+    assert server.run(["GET", "key"]) is None
+
+
+def test_del_multiple(server):
+    server.run(["SET", "key1", "value"])
+    server.run(["SET", "key2", "value"])
+    assert server.run(["DEL", "key1", "key2", "key3"]) == 2
