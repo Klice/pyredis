@@ -67,7 +67,7 @@ class RedisCommand:
                 v = next(args_iter)
                 try:
                     v = self.param_types[a](v)
-                except:
+                except ValueError:
                     raise Exception(f"Paramter {a} value should be type {self.param_types[a]}")
                 res[a.lower()] = v
         return res
