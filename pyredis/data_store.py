@@ -27,3 +27,6 @@ class RedisDataStore:
                 del (self.data_store[key])
                 keys_deleted += 1
         return keys_deleted
+
+    def exists(self, key):
+        return key in self.data_store

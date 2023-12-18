@@ -16,6 +16,9 @@ REDIS_COMMADS = {
         {"EX": int, "PX": int, "EXAT": int, "PXAT": int}
     ),
     "DEL": RedisCommand("DEL", ["*key"]),
+    "INCR": RedisCommand("INCR", ["key"]),
+    "DECR": RedisCommand("DECR", ["key"]),
+    "EXISTS": RedisCommand("EXISTS", ["*key"]),
 }
 
 
@@ -69,6 +72,30 @@ class RedisServer:
 
     def _command_del(self, data):
         return self.data_store.delete(data["key"])
+
+    def _command_incr(self, data):
+        return self._inrc_or_decr(data, 1)
+
+    def _command_decr(self, data):
+        return self._inrc_or_decr(data, -1)
+
+    def _command_exists(self, data):
+        res = 0
+        for key in data["key"]:
+            if self.data_store.exists(key):
+                res += 1
+        return res
+
+    def _inrc_or_decr(self, data, step):
+        v = self._command_get(data)
+        if v is None:
+            v = 0
+        try:
+            new_val = int(v) + step
+        except ValueError:
+            return RedisError("value is not an integer or out of range")
+        self._command_set({"key": data["key"], "value": str(new_val)})
+        return new_val
 
     @staticmethod
     def _return_value(value):

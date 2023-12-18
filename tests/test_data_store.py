@@ -38,3 +38,9 @@ def test_del_multiple(data_store):
     data_store.set("key1", "value", 1)
     data_store.set("key2", "value", 1)
     assert data_store.delete(["key1", "key2", "key3"]) == 2
+
+
+def test_exists(data_store):
+    data_store.set("key_exists", "value", 1)
+    assert data_store.exists("key_exists") is True
+    assert data_store.exists("key_nonexists") is False
