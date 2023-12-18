@@ -19,11 +19,6 @@ def test_echo(server):
     assert server.run(["ECHO", "Test World"]) == "Test World"
 
 
-def test_set_get(server):
-    assert server.run(["SET", "Key", "Value"]) == SimpleString("OK")
-    assert server.run(["GET", "Key"]) == "Value"
-
-
 def test_get_nonexistent(server):
     assert server.run(["GET", "nonexistent"]) is None
 

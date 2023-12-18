@@ -10,16 +10,17 @@ logger = logging.getLogger(__name__)
 
 class RedisRequestHandler(socketserver.BaseRequestHandler):
     def handle(self):
+        cur_thread = threading.current_thread().name
+        logger.info(f"{cur_thread}: New connection from {self.client_address[0]}:{self.client_address[1]}")
         while True:
-            cur_thread = threading.current_thread().name
-            logger.debug(f"Thread: {cur_thread} Waiting for request...")
-            self.data = self.request.recv(1024).strip()
-            logger.debug(f"Thread: {cur_thread} Request: {self.data} from {self.client_address[0]}")
+            logger.debug(f"{cur_thread}: Waiting for request...")
+            self.data = self.request.recv(1024)
+            logger.debug(f"{cur_thread}: Request: {self.data} from {self.client_address[0]}")
             if not self.data:
-                logger.debug(f"Thread: {cur_thread} End of data")
+                logger.info(f"{cur_thread}: {self.client_address[0]} disconnected")
                 break
             res = RequestProcessor(RedisServer()).process_request(self.data)
-            logger.debug(f"Thread: {cur_thread} Response: {res}")
+            logger.debug(f"{cur_thread}: Response: {res}")
             self.request.sendall(res)
 
 
