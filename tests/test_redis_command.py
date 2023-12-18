@@ -38,20 +38,20 @@ class TestSetCommand:
             command.parse(["somekey", "somevalue", "NX", "XX"])
 
     def test_set_ex(self, command):
-        res = command.parse(["somekey", "somevalue", "EX", 123])
+        res = command.parse(["somekey", "somevalue", "EX", '123'])
         assert res["ex"] == 123
 
     def test_set_mutually_exclusive_params_error(self, command):
         with pytest.raises(Exception) as _:
-            command.parse(["somekey", "somevalue", "EX", 123, "PX", 123])
+            command.parse(["somekey", "somevalue", "EX", '123', "PX", '123'])
 
     def test_set_mutually_exclusive_param_and_flag_error(self, command):
         with pytest.raises(Exception) as _:
-            command.parse(["somekey", "somevalue", "EX", 123, "KEEPTTL"])
+            command.parse(["somekey", "somevalue", "EX", '123', "KEEPTTL"])
 
     def test_set_param_wrong_type(self, command):
         with pytest.raises(Exception) as _:
-            command.parse(["somekey", "somevalue", "EX", "123"])
+            command.parse(["somekey", "somevalue", "EX", "aaa"])
 
     def test_set_invalid_arg(self, command):
         with pytest.raises(Exception) as ex_info:

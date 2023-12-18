@@ -65,7 +65,9 @@ class RedisCommand:
                 res[f"is_{a.lower()}"] = True
             if a in self.params:
                 v = next(args_iter)
-                if type(v) is not self.param_types[a]:
+                try:
+                    v = self.param_types[a](v)
+                except:
                     raise Exception(f"Paramter {a} value should be type {self.param_types[a]}")
                 res[a.lower()] = v
         return res
