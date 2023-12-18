@@ -4,7 +4,7 @@ from pyredis.redis_command_parser import RedisCommand
 from pyredis.redis_types import RedisError, SimpleString
 
 
-REDIS_COMMADS = {
+REDIS_COMMANDS = {
     "PING": RedisCommand("PING"),
     "ECHO": RedisCommand("ECHO", ["value"]),
     "GET": RedisCommand("GET", ["key"]),
@@ -36,9 +36,9 @@ class RedisServer:
 
     def run(self, command_with_args):
         command = command_with_args[0]
-        if command not in REDIS_COMMADS:
+        if command not in REDIS_COMMANDS:
             return RedisError("Unknown command: " + " ".join(command_with_args))
-        command_def = REDIS_COMMADS[command]
+        command_def = REDIS_COMMANDS[command]
         command_dict = command_def.parse(command_with_args[1:])
         ruuner = getattr(self, f"_command_{command.lower()}")
         return ruuner(command_dict)
