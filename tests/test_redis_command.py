@@ -1,22 +1,22 @@
 import pytest
 from pyredis.redis_command_parser import RedisCommand
-from pyredis.redis_server import REDIS_COMMADS
+from pyredis.redis_server import REDIS_COMMANDS
 
 
 @pytest.fixture
 def command():
-    return REDIS_COMMADS["SET"]
+    return REDIS_COMMANDS["SET"]
 
 
 class TestParamList:
     def test_extra_args(self):
-        command = RedisCommand("DEL", ["*key"])
+        command = RedisCommand(["*key"])
         assert command.parse(["key1", "key2", "key3"])["key"] == ["key1", "key2", "key3"]
 
 
 class TestConfigCommand:
     def test_extra_args(self):
-        command = RedisCommand("CONFIG", allow_extra=True)
+        command = RedisCommand(allow_extra=True)
         command.parse(["key"])
 
 

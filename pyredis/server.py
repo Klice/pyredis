@@ -32,6 +32,7 @@ class RedisTCPServer:
     def start(host, port):
         with ThreadedTCPServer((host, port), RedisRequestHandler) as server:
             try:
+                logger.info(f"PyRedis is listening on {host}:{port}")
                 server.serve_forever()
             except KeyboardInterrupt:
                 logger.info("Server Terminated")

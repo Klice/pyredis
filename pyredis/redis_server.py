@@ -5,20 +5,22 @@ from pyredis.redis_types import RedisError, SimpleString
 
 
 REDIS_COMMANDS = {
-    "PING": RedisCommand("PING"),
-    "ECHO": RedisCommand("ECHO", ["value"]),
-    "GET": RedisCommand("GET", ["key"]),
-    "CONFIG": RedisCommand("CONFIG", allow_extra=True),
+    "PING": RedisCommand(),
+    "ECHO": RedisCommand(["value"]),
+    "GET": RedisCommand(["key"]),
+    "CONFIG": RedisCommand(allow_extra=True),
     "SET": RedisCommand(
-        "SET",
         ["key", "value"],
         ["GET", ["NX", "XX"], ["KEEPTTL", "EX", "PX", "EXAT", "PXAT"]],
         {"EX": int, "PX": int, "EXAT": int, "PXAT": int}
     ),
-    "DEL": RedisCommand("DEL", ["*key"]),
-    "INCR": RedisCommand("INCR", ["key"]),
-    "DECR": RedisCommand("DECR", ["key"]),
-    "EXISTS": RedisCommand("EXISTS", ["*key"]),
+    "DEL": RedisCommand(["*key"]),
+    "INCR": RedisCommand(["key"]),
+    "DECR": RedisCommand(["key"]),
+    "EXISTS": RedisCommand(["*key"]),
+    "LPUSH": RedisCommand(["key", "*element"]),
+    "RPUSH": RedisCommand(["key", "*element"]),
+    "LRANGE": RedisCommand(["key", "start", "stop"]),
 }
 
 
@@ -41,7 +43,10 @@ class RedisServer:
         command_def = REDIS_COMMANDS[command]
         command_dict = command_def.parse(command_with_args[1:])
         ruuner = getattr(self, f"_command_{command.lower()}")
-        return ruuner(command_dict)
+        try:
+            return ruuner(command_dict)
+        except Exception as e:
+            return RedisError(str(e))
 
     def _command_ping(self, _):
         return SimpleString("PONG")
@@ -85,6 +90,15 @@ class RedisServer:
             if self.data_store.exists(key):
                 res += 1
         return res
+
+    def _command_lpush(self, data):
+        return self.data_store.lpush(data["key"], data["element"])
+
+    def _command_rpush(self, data):
+        return self.data_store.rpush(data["key"], data["element"])
+
+    def _command_lrange(self, data):
+        return self.data_store.lrange(data["key"], int(data["start"]), int(data["stop"]))
 
     def _inrc_or_decr(self, data, step):
         v = self._command_get(data)

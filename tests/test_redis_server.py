@@ -4,6 +4,10 @@ from pyredis.redis_server import RedisServer
 from pyredis.redis_types import RedisError, SimpleString
 
 
+def cmd(command: str) -> list[str]:
+    return command.split(" ")
+
+
 @pytest.fixture
 def server():
     return RedisServer()
@@ -89,4 +93,28 @@ def test_exists(server):
 
 
 def test_exists_nonexistent(server):
-    assert server.run(["EXISTS", "key_nonexistent"]) == 0
+    assert server.run(cmd("EXISTS key_nonexistent")) == 0
+
+
+def test_lpush_one_noexistent(server):
+    assert server.run(cmd('LPUSH mylist1 world1')) == 1
+    assert server.run(cmd('LPUSH mylist1 world2')) == 2
+    assert server.run(cmd('LPUSH mylist1 world3')) == 3
+    assert server.run(cmd('LRANGE mylist1 0 -1')) == ["world3", "world2", "world1"]
+
+
+def test_lpush_insert_multiple(server):
+    assert server.run(cmd('LPUSH mylist2 "world" "world" "world"')) == 3
+    assert server.run(cmd('LPUSH mylist2 "world" "world" "world"')) == 6
+
+
+def test_rpush_one_noexistent(server):
+    assert server.run(cmd('RPUSH mylist3 world1')) == 1
+    assert server.run(cmd('RPUSH mylist3 world2')) == 2
+    assert server.run(cmd('RPUSH mylist3 world3')) == 3
+    assert server.run(cmd('LRANGE mylist3 0 -1')) == ["world1", "world2", "world3"]
+
+
+def test_rpush_insert_multiple(server):
+    assert server.run(cmd('RPUSH mylist4 "world" "world" "world"')) == 3
+    assert server.run(cmd('RPUSH mylist4 "world" "world" "world"')) == 6

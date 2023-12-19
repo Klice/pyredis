@@ -1,6 +1,5 @@
 class RedisCommand:
-    def __init__(self, name, main_params=None, all_args=None, param_types=None, allow_extra=False):
-        self.name = name
+    def __init__(self, main_params=None, all_args=None, param_types=None, allow_extra=False):
         if main_params is None:
             self.main_params = []
         else:

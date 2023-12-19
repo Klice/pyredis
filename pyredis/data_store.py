@@ -30,3 +30,28 @@ class RedisDataStore:
 
     def exists(self, key):
         return key in self.data_store
+
+    def lpush(self, key, values):
+        if key not in self.data_store:
+            self.data_store[key] = []
+        self.data_store[key] = values + self.data_store[key]
+        return len(self.data_store[key])
+
+    def rpush(self, key, values):
+        if key not in self.data_store:
+            self.data_store[key] = []
+        self.data_store[key] = self.data_store[key] + values
+        return len(self.data_store[key])
+
+    def lrange(self, key, start, stop):
+        if key not in self.data_store:
+            return []
+        if type(self.data_store[key]) is not list:
+            raise Exception("WRONGTYPE Operation against a key holding the wrong kind of value")
+        list_len = len(self.data_store[key])
+        if abs(start) > list_len or abs(stop) > list_len:
+            return []
+        else:
+            if stop == -1:
+                stop = len(self.data_store[key])
+            return self.data_store[key][start:stop+1]
