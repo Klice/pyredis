@@ -42,9 +42,9 @@ class RedisServer:
             return RedisError("Unknown command: " + " ".join(command_with_args))
         command_def = REDIS_COMMANDS[command]
         command_dict = command_def.parse(command_with_args[1:])
-        ruuner = getattr(self, f"_command_{command.lower()}")
+        runner = getattr(self, f"_command_{command.lower()}")
         try:
-            return ruuner(command_dict)
+            return runner(command_dict)
         except Exception as e:
             return RedisError(str(e))
 
